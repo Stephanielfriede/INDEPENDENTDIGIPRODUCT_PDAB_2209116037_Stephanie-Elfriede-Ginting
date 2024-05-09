@@ -13,6 +13,21 @@ proportions_team = data['team'].value_counts(normalize=True)
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
+# Range of each column
+value_ranges = {
+    'quarter': (0, 4),
+    'department': (0, 1),
+    'day': (0, 31),
+    'team': (1, 12),
+    'targeted_productivity': (0.6, 0.8),
+    'smv': (2.9, 52.615),
+    'wip': (10, 23122),
+    'over_time': (0, 15090),
+    'incentive': (0, 119),
+    'no_of_workers': (2, 89),
+    'productivity_difference': (-0.3723386377500001, 0.396633333)
+}
+
 # Define a function to make predictions
 def predict_productivity(quarter, department, day, team, targeted_productivity, smv, wip, over_time, incentive, no_of_workers, productivity_difference):
     input_data = [[quarter, department, day, team, targeted_productivity, smv, wip, over_time, incentive, no_of_workers, productivity_difference]]
@@ -27,7 +42,7 @@ with st.sidebar:
 
 
 # Sidebar navigation
-nav_selection = st.sidebar.selectbox("**Select Dashboard Section**", ["Home", "Visualizations", "Predict"])
+nav_selection = st.sidebar.selectbox("*Select Dashboard Section*", ["Home", "Visualizations", "Predict"])
 
 
 if nav_selection == "Home":
@@ -64,11 +79,11 @@ if nav_selection == "Home":
 elif nav_selection == "Visualizations":
     # Pilihan visualisasi
     st.header("Pilih Visualisasi")
-    visualization_option = st.selectbox("Visualisasi", ["Distribusi", "Perbandingan", "Komposisi", "Hubungan"])
+    visualization_option = st.selectbox("Visualisasi", ["Distribution", "Comparison", "Composition", "Relationship"])
 
     # Distribusi
-    if visualization_option == "Distribusi":
-        st.header("Distribusi")
+    if visualization_option == "Distribution":
+        st.header("Distribution")
 
         # Distribusi pekerjaan di masing-masing kuartal
         fig1 = px.bar(data['quarter'].value_counts(), x=data['quarter'].unique(), y=data['quarter'].value_counts().values, labels={'x': 'Kuartal', 'y': 'Jumlah'}, title='Distribusi Pekerjaan di Setiap Kuartal')
@@ -76,61 +91,89 @@ elif nav_selection == "Visualizations":
 
         # Penjelasan distribusi pekerjaan di setiap kuartal
         st.write("Distribusi pekerjaan di setiap kuartal menunjukkan jumlah pekerjaan yang dilakukan dalam rentang waktu yang berbeda-beda selama periode tertentu, yang dibagi menjadi kuartal.")
-        st.write("- **Kuartal 0**: Terdapat 342 pekerjaan yang dilakukan selama kuartal ini.")
-        st.write("- **Kuartal 1**: Pada kuartal ini, dilakukan sebanyak 295 pekerjaan.")
-        st.write("- **Kuartal 2**: Terdapat 226 pekerjaan yang dilakukan selama kuartal ini.")
-        st.write("- **Kuartal 3**: Pada kuartal ini, terdapat 187 pekerjaan yang dilakukan.")
-        st.write("- **Kuartal 4**: Jumlah pekerjaan paling sedikit terjadi pada kuartal ini, hanya terdapat 41 pekerjaan.")
-
-        # Lebih banyak pekerjaan di departemen jahit
-        fig2 = px.pie(data, names='department', title='Lebih Banyak Pekerjaan di Departemen Jahit')
-        st.plotly_chart(fig2, use_container_width=True)
-
-        # Proporsi Hari Bekerja
-        proportion_days_worked = data['day'].value_counts(normalize=True)
-        fig3 = px.pie(names=proportion_days_worked.index, values=proportion_days_worked.values, title='Proporsi Hari Bekerja')
-        st.plotly_chart(fig3, use_container_width=True)
+        st.write("- *Kuartal 0*: Terdapat 342 pekerjaan yang dilakukan selama kuartal ini.")
+        st.write("- *Kuartal 1*: Pada kuartal ini, dilakukan sebanyak 295 pekerjaan.")
+        st.write("- *Kuartal 2*: Terdapat 226 pekerjaan yang dilakukan selama kuartal ini.")
+        st.write("- *Kuartal 3*: Pada kuartal ini, terdapat 187 pekerjaan yang dilakukan.")
+        st.write("- *Kuartal 4*: Jumlah pekerjaan paling sedikit terjadi pada kuartal ini, hanya terdapat 41 pekerjaan.")
 
         # Rata-rata Produktivitas Aktual Setiap Kuartal
         avg_productivity_per_quarter = data.groupby('quarter')['actual_productivity'].mean()
         fig4 = px.bar(x=avg_productivity_per_quarter.index, y=avg_productivity_per_quarter.values, labels={'x':'Kuartal', 'y':'Rata-rata Produktivitas Aktual'}, title='Rata-rata Produktivitas Aktual Setiap Kuartal')
         st.plotly_chart(fig4, use_container_width=True)
 
-        # Proporsi Untuk Setiap Tim
-        fig5 = px.pie(names=proportions_team.index, values=proportions_team.values, title='Proporsi Untuk Setiap Tim')
-        st.plotly_chart(fig5, use_container_width=True)
+    # Comparison
+    elif visualization_option == "Comparison":
+        st.header("Comparison")
 
-    # Perbandingan
-    elif visualization_option == "Perbandingan":
-        st.header("Perbandingan")
-
-        # Box Plot Produktivitas Aktual per Departemen
-        st.subheader("Box Plot Produktivitas Aktual per Departemen")
-        fig6 = px.box(data, x='department', y='actual_productivity', title='Box Plot Produktivitas Aktual per Departemen')
+        # Box Plot of Actual Productivity by Department
+        st.subheader("Comparison: Box Plot of Actual Productivity by Department")
+        fig6 = px.box(data, x='department', y='actual_productivity', title='Box Plot of Actual Productivity by Department')
         st.plotly_chart(fig6, use_container_width=True)
 
-        # Rata-rata Produktivitas Aktual per Hari
-        st.subheader("Rata-rata Produktivitas Aktual per Hari")
-        avg_productivity_per_day = data.groupby('day')['actual_productivity'].mean()
-        st.bar_chart(avg_productivity_per_day)
+        # Average Productivity per Day (Stacked Bar Plot)
+        st.subheader("Comparison: Average Productivity per Day")
+        avg_productivity_per_day = data.groupby('day')['actual_productivity'].mean().reset_index()
+        avg_productivity_per_day['Average Productivity'] = avg_productivity_per_day['actual_productivity']
+        avg_productivity_per_day.drop(columns=['actual_productivity'], inplace=True)
+        fig_avg_productivity_per_day = px.bar(avg_productivity_per_day, x='day', y='Average Productivity',
+                                            title='Average Productivity per Day', labels={'day': 'Day', 'Average Productivity': 'Average Productivity'},
+                                            color='Average Productivity', color_continuous_scale='viridis')
+        st.plotly_chart(fig_avg_productivity_per_day, use_container_width=True)
 
-        # Rata-rata Produktivitas per Hari
-        st.subheader("Rata-rata Produktivitas per Hari")
-        fig7 = px.bar(x=avg_productivity_per_day.index, y=avg_productivity_per_day.values, labels={'x':'Hari', 'y':'Rata-rata Produktivitas'})
-        st.plotly_chart(fig7, use_container_width=True)
+        # Actual vs Targeted Productivity (Bar Plot)
+        st.subheader("Comparison: Actual vs Targeted Productivity (Bar Plot)")
+        fig_actual_target_bar = px.bar(data, x='targeted_productivity', y='actual_productivity',
+                                        labels={'targeted_productivity': 'Targeted Productivity',
+                                                'actual_productivity': 'Actual Productivity'},
+                                        title='Comparison: Actual vs Targeted Productivity (Bar Plot)')
+        st.plotly_chart(fig_actual_target_bar)
 
-    # Komposisi
-    elif visualization_option == "Komposisi":
-        st.header("Komposisi")
+        # Actual Productivity vs Productivity Difference (Scatter Plot)
+        st.subheader("Comparison: Actual Productivity vs Productivity Difference (Scatter Plot)")
+        fig_actual_difference_scatter = px.scatter(data, x='productivity_difference', y='actual_productivity',
+                                                    labels={'productivity_difference': 'Productivity Difference',
+                                                            'actual_productivity': 'Actual Productivity'},
+                                                    title='Comparison: Actual Productivity vs Productivity Difference (Scatter Plot)')
+        st.plotly_chart(fig_actual_difference_scatter)
 
-        # Produktivitas departemen di setiap kuartal
-        st.subheader("Produktivitas Departemen di Setiap Kuartal")
-        fig8 = px.bar(data, x='quarter', y='actual_productivity', color='department', barmode='group', title='Produktivitas Departemen di Setiap Kuartal')
-        st.plotly_chart(fig8, use_container_width=True)
+    # Composition
+    elif visualization_option == "Composition":
+        st.header("Composition")
+
+        # Composition Quarter
+        st.header("Composition Quarter")
+        fig_quarter = px.pie(data, names='quarter', title='Composition Quarter')
+        st.plotly_chart(fig_quarter)
+
+        # Composition Department
+        st.header("Composition Department")
+        fig_department = px.pie(data, names='department', title='Composition Department')
+        st.plotly_chart(fig_department)
+
+        # Composition Day
+        st.header("Composition Day")
+        fig_day = px.pie(data, names='day', title='Composition Day')
+        st.plotly_chart(fig_day)
+
+        # Composition Team
+        st.header("Composition Team")
+        fig_team = px.pie(data, names='team', title='Composition Team')
+        st.plotly_chart(fig_team)
+
+                # Kolom yang ingin diplot Compositionnya
+        # Kolom yang ingin diplot Compositionnya
+        columns_to_plot = ['targeted_productivity', 'smv', 'wip', 'over_time', 'incentive', 'no_of_workers', 'actual_productivity', 'productivity_difference']
+
+        # Loop through each column
+        for column in columns_to_plot:
+            st.header(f"Composition {column.replace('_', ' ').title()}")
+            fig = px.histogram(data, x=column, title=f"Composition {column.replace('_', ' ').title()}", labels={'count': 'Count'})
+            st.plotly_chart(fig)
 
     # Hubungan
-    elif visualization_option == "Hubungan":
-        st.header("Hubungan")
+    elif visualization_option == "Relationship":
+        st.header("Relationship")
 
         # Heatmap Korelasi
         st.subheader("Heatmap Korelasi")
@@ -146,33 +189,54 @@ elif nav_selection == "Visualizations":
 
         # Penjelasan Korelasi untuk Setiap Variabel
         st.write("Berikut Penjelasan Korelasi untuk Setiap Variabel:")
-        st.write("1. **Department**: Ada hubungan positif yang kuat antara departemen dengan targeted_productivity, no_of_workers, dan incentive. Ada hubungan negatif yang kuat dengan wip dan productivity_difference.")
-        st.write("2. **Team**: Pola korelasi di sini mirip dengan departemen, dengan hubungan positif yang kuat dengan targeted_productivity, no_of_workers, dan incentive, dan hubungan negatif yang kuat dengan wip dan productivity_difference.")
-        st.write("3. **SMV**: Ada hubungan positif yang kuat antara SMV dengan incentive, yang berarti semakin tinggi nilai SMV, semakin besar kemungkinan ada insentif yang diberikan. Ada hubungan negatif yang kuat antara SMV dengan wip.")
-        st.write("4. **WIP**: Korelasi negatif yang kuat antara wip dengan variabel lain menunjukkan bahwa semakin tinggi jumlah pekerjaan yang masih dalam proses, semakin rendah produktivitas atau insentif yang diberikan, dan sebaliknya.")
-        st.write("5. **Over Time**: Hubungan positif yang kuat dengan over_time menunjukkan bahwa semakin banyak waktu lembur yang digunakan, semakin tinggi kemungkinan adanya insentif atau peningkatan jumlah pekerja.")
-        st.write("6. **Incentive**: Hubungan positif yang kuat dengan incentive menunjukkan bahwa semakin besar insentif yang diberikan, semakin tinggi kemungkinan ada peningkatan produktivitas atau pekerjaan yang dilakukan oleh tim.")
-        st.write("7. **No of Workers**: Ada hubungan positif yang kuat antara jumlah pekerja dengan variabel lain seperti department, team, smv, over_time, dan incentive.")
-        st.write("8. **Productivity Difference**: Korelasi positif yang kuat dengan variabel lain menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin besar kemungkinan adanya pekerjaan yang masih dalam proses atau waktu lembur yang digunakan.")
-        st.write("9. **Actual Productivity**: Korelasi negatif yang kuat dengan productivity_difference menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin rendah produktivitas aktualnya.")
-
-
+        st.write("1. *Department*: Ada hubungan positif yang kuat antara departemen dengan targeted_productivity, no_of_workers, dan incentive. Ada hubungan negatif yang kuat dengan wip dan productivity_difference.")
+        st.write("2. *Team*: Pola korelasi di sini mirip dengan departemen, dengan hubungan positif yang kuat dengan targeted_productivity, no_of_workers, dan incentive, dan hubungan negatif yang kuat dengan wip dan productivity_difference.")
+        st.write("3. *SMV*: Ada hubungan positif yang kuat antara SMV dengan incentive, yang berarti semakin tinggi nilai SMV, semakin besar kemungkinan ada insentif yang diberikan. Ada hubungan negatif yang kuat antara SMV dengan wip.")
+        st.write("4. *WIP*: Korelasi negatif yang kuat antara wip dengan variabel lain menunjukkan bahwa semakin tinggi jumlah pekerjaan yang masih dalam proses, semakin rendah produktivitas atau insentif yang diberikan, dan sebaliknya.")
+        st.write("5. *Over Time*: Hubungan positif yang kuat dengan over_time menunjukkan bahwa semakin banyak waktu lembur yang digunakan, semakin tinggi kemungkinan adanya insentif atau peningkatan jumlah pekerja.")
+        st.write("6. *Incentive*: Hubungan positif yang kuat dengan incentive menunjukkan bahwa semakin besar insentif yang diberikan, semakin tinggi kemungkinan ada peningkatan produktivitas atau pekerjaan yang dilakukan oleh tim.")
+        st.write("7. *No of Workers*: Ada hubungan positif yang kuat antara jumlah pekerja dengan variabel lain seperti department, team, smv, over_time, dan incentive.")
+        st.write("8. *Productivity Difference*: Korelasi positif yang kuat dengan variabel lain menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin besar kemungkinan adanya pekerjaan yang masih dalam proses atau waktu lembur yang digunakan.")
+        st.write("9. *Actual Productivity*: Korelasi negatif yang kuat dengan productivity_difference menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin rendah produktivitas aktualnya.")
+        
 elif nav_selection == "Predict":
-    st.title("Actual Productivity Prediction")
-
     # Input fields
     st.header("Input Features")
-    quarter = st.number_input("Quarter", min_value=0, max_value=3, step=1)
-    department = st.number_input("Department", min_value=0)
-    day = st.number_input("Day", min_value=1, max_value=31, step=1)
-    team = st.number_input("Team", min_value=1)
-    targeted_productivity = st.number_input("Targeted Productivity", min_value=0.0, max_value=1.0, step=0.01)
-    smv = st.number_input("SMV")
-    wip = st.number_input("WIP")
-    over_time = st.number_input("Over Time")
-    incentive = st.number_input("Incentive")
-    no_of_workers = st.number_input("Number of Workers")
-    productivity_difference = st.number_input("Productivity Difference")
+
+    # Select box for quarter
+    quarter_options = list(range(value_ranges['quarter'][0], value_ranges['quarter'][1]+1))  # Buat daftar nilai opsional
+    quarter = st.selectbox("Quarter", quarter_options)
+
+    # Select box for department
+    department_options = list(range(value_ranges['department'][0], value_ranges['department'][1]+1))  # Buat daftar nilai opsional
+    department = st.selectbox("Department", department_options)
+
+    # Slider for day
+    day = st.slider("Day", min_value=value_ranges['day'][0], max_value=value_ranges['day'][1], step=1)
+
+    # Slider for team
+    team = st.slider("Team", min_value=value_ranges['team'][0], max_value=value_ranges['team'][1], step=1)
+
+    # Slider for targeted productivity
+    targeted_productivity = st.slider("Targeted Productivity", min_value=value_ranges['targeted_productivity'][0], max_value=value_ranges['targeted_productivity'][1], step=0.01)
+
+    # Slider for smv
+    smv = st.slider("SMV", min_value=value_ranges['smv'][0], max_value=value_ranges['smv'][1], step=0.01)
+
+    # Slider for incentive
+    incentive = st.slider("Incentive", min_value=value_ranges['incentive'][0], max_value=value_ranges['incentive'][1], step=1)
+
+    # Slider for productivity difference
+    productivity_difference = st.slider("Productivity Difference", min_value=value_ranges['productivity_difference'][0], max_value=value_ranges['productivity_difference'][1], step=0.01)
+
+    # Number input for WIP
+    wip = st.number_input("WIP", min_value=value_ranges['wip'][0], max_value=value_ranges['wip'][1], step=1)
+
+    # Number input for over time
+    over_time = st.number_input("Over Time", min_value=value_ranges['over_time'][0], max_value=value_ranges['over_time'][1], step=1)
+
+    # Slider for number of workers
+    no_of_workers = st.slider("Number of Workers", min_value=value_ranges['no_of_workers'][0], max_value=value_ranges['no_of_workers'][1], step=1)
 
     # Make prediction
     if st.button("Predict"):
