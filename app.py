@@ -93,10 +93,7 @@ elif nav_selection == "Visualizations":
         st.plotly_chart(fig_histogram2)# Menampilkan data dalam bentuk tabel
         # Paragraf yang akan ditampilkan menggunakan st.write
         paragraph = """
-        Dari grafik tersebut, kita dapat melihat bahwa tidak terdapat pola yang konsisten yang mengindikasikan peningkatan atau penurunan linier dalam produktivitas seiring dengan peningkatan SMV. Misalnya, ketika SMV berada dalam rentang 2 hingga 3.99, produktivitas aktualnya mencapai 226.9359. Namun, ketika SMV berada dalam rentang 12 hingga 13.99, produktivitas aktualnya secara drastis menurun menjadi hanya 1.25021.
-
-        Hal ini menunjukkan bahwa terdapat faktor-faktor kompleks lainnya yang memengaruhi produktivitas, yang tidak dapat secara langsung diatribusikan hanya pada jumlah jam kerja yang digunakan.
-        """
+        Dari grafik tersebut, pola yang jelas dalam hubungan antara tingkat standar waktu kerja (SMV) dan produktivitas aktual tidak dapat ditemukan. Meskipun ada rentang SMV di mana produktivitas meningkat, seperti pada rentang 2 hingga 3.99, di mana produktivitas mencapai 226.9359, ada juga kasus di mana produktivitas secara drastis menurun meskipun SMV meningkat, seperti pada rentang 12 hingga 13.99, di mana produktivitas turun menjadi hanya 1.25021. Hal ini menunjukkan bahwa ada faktor-faktor kompleks lain yang memengaruhi produktivitas selain dari jumlah jam kerja yang digunakan."""
 
         # Menampilkan paragraf menggunakan st.write
         st.write(paragraph)
@@ -106,84 +103,52 @@ elif nav_selection == "Visualizations":
         fig_histogram3.update_traces(marker=dict(color='rgba(100, 149, 237, 0.7)', line=dict(color='rgba(0,0,0,0.5)', width=0.5)), opacity=0.75)
         fig_histogram3.update_layout(bargap=0.1)
         st.plotly_chart(fig_histogram3)
-        import streamlit as st
-        st.write("Grafik menunjukkan bahwa ada hubungan yang jelas antara jumlah pekerjaan dalam proses (Work in Progress/WIP) dan produktivitas aktual. Saat jumlah WIP naik dari 0-199 menjadi 200-399, ada lonjakan signifikan dalam produktivitas dari 7.324 menjadi 13.635. Pola ini berlanjut hingga mencapai puncaknya pada rentang WIP 1000-1199, di mana produktivitas mencapai nilai tertinggi sebesar 485.425. Namun, setelah mencapai titik ini, produktivitas menurun saat WIP meningkat menjadi 1200-1399, menunjukkan adanya kemungkinan penurunan efisiensi saat beban kerja melebihi kapasitas optimal. Penurunan ini terus terjadi ketika WIP berada dalam rentang 1400-1999, menunjukkan bahwa beban kerja yang terlalu besar dapat menurunkan produktivitas secara signifikan.")
-        st.write("Kesimpulannya, data menunjukkan bahwa pengelolaan jumlah WIP sangat penting untuk menjaga produktivitas yang optimal. Jumlah WIP yang terlalu sedikit dapat menyebabkan sumber daya tidak optimal, sedangkan jumlah yang terlalu banyak dapat mengganggu alur kerja dan menurunkan efisiensi.")
-
-
+        st.write("Grafik menunjukkan bahwa terdapat hubungan yang signifikan antara jumlah pekerjaan dalam proses (Work in Progress/WIP) dan produktivitas aktual. Saat jumlah WIP meningkat dari 0-199 menjadi 200-399, terjadi lonjakan produktivitas yang signifikan. Puncak produktivitas tercapai pada rentang WIP 1000-1199, sebelum mengalami penurunan ketika WIP terus meningkat melebihi kapasitas optimal. Hal ini menekankan pentingnya pengelolaan jumlah WIP untuk menjaga produktivitas yang optimal, dengan jumlah yang terlalu sedikit atau terlalu banyak dapat mengganggu efisiensi dalam alur kerja.")
+        
         fig_histogram4 = px.histogram(data, y='actual_productivity', x='over_time', title='Distribution of Actual Productivity vs Over Time')
         fig_histogram4.update_traces(marker=dict(color='rgba(100, 149, 237, 0.7)', line=dict(color='rgba(0,0,0,0.5)', width=0.5)), opacity=0.75)
         fig_histogram4.update_layout(bargap=0.1)
         st.plotly_chart(fig_histogram4)
-        st.write("""
-Hasil grafik menunjukkan korelasi antara jam lembur dan produktivitas aktual. Ketika jam lembur masih sedikit, produktivitas juga rendah. Namun, lonjakan signifikan dalam produktivitas terjadi saat jam lembur meningkat. Puncak produktivitas tercapai pada rentang jam lembur tertentu, tetapi setelahnya terjadi penurunan, mungkin karena kelelahan atau penurunan efisiensi.
-
-Kesimpulannya, meskipun jam lembur berkontribusi positif pada produktivitas, peningkatan yang berlebihan tidak selalu menghasilkan peningkatan yang proporsional. Oleh karena itu, manajemen jam lembur harus bijaksana untuk menjaga efisiensi dan kesejahteraan karyawan.
-""")
-
+        st.write("""Hasil grafik menunjukkan korelasi yang signifikan antara jumlah jam lembur dan produktivitas aktual. Meskipun produktivitas cenderung meningkat saat jam lembur meningkat, terdapat titik di mana produktivitas mencapai puncaknya sebelum mengalami penurunan. Penurunan ini mungkin disebabkan oleh kelelahan atau penurunan efisiensi. Kesimpulannya, manajemen jam lembur harus dikelola dengan bijaksana untuk menjaga keseimbangan antara peningkatan produktivitas dan kesejahteraan karyawan.""")
 
 
         fig_histogram5 = px.histogram(data, y='actual_productivity', x='incentive', title='Distribution of Actual Productivity vs Incentive')
         fig_histogram5.update_traces(marker=dict(color='rgba(100, 149, 237, 0.7)', line=dict(color='rgba(0,0,0,0.5)', width=0.5)), opacity=0.75)
         fig_histogram5.update_layout(bargap=0.1)
         st.plotly_chart(fig_histogram5)
-        st.write("Grafik batang 'Distribusi Produktivitas Sebenarnya vs Insentif' menggambarkan bagaimana pemberian insentif kepada pekerja memengaruhi produktivitas mereka. Secara menarik, terlihat bahwa ketika insentif diberikan, produktivitas sebenarnya cenderung menurun. Hal yang menarik, titik tertinggi produktivitas tercapai ketika tidak ada insentif yang diberikan. Ini menunjukkan bahwa dalam beberapa situasi, insentif mungkin tidak menjadi faktor utama dalam meningkatkan produktivitas. Secara keseluruhan, grafik tersebut menyoroti bahwa respons produktivitas terhadap insentif tidak selalu sesuai harapan. Terkadang, memberikan lebih banyak insentif tidak akan berdampak pada peningkatan produktivitas sebagaimana yang diantisipasi. Ini menegaskan perlunya mempertimbangkan faktor lain yang mungkin mempengaruhi kinerja pekerja saat merancang sistem insentif yang efektif.")
+        st.write("Grafik 'Actual Productivity vs Incentive' menunjukkan bahwa pemberian insentif dapat memengaruhi produktivitas. Namun, menariknya, produktivitas cenderung menurun saat insentif diberikan, dengan titik tertinggi tercapai tanpa insentif. Ini menunjukkan bahwa insentif tidak selalu menjadi faktor utama dalam meningkatkan produktivitas, dan perlu mempertimbangkan faktor lain dalam merancang sistem insentif yang efektif.")
 
 
         fig_histogram6 = px.histogram(data, y='actual_productivity', x='no_of_workers', title='Distribution of Actual Productivity vs Number of Workers')
         fig_histogram6.update_traces(marker=dict(color='rgba(100, 149, 237, 0.7)', line=dict(color='rgba(0,0,0,0.5)', width=0.5)), opacity=0.75)
         fig_histogram6.update_layout(bargap=0.1)
         st.plotly_chart(fig_histogram6)
-        st.write("Dalam grafik tersebut, terdapat sumbu horizontal yang menunjukkan jumlah pekerja mulai dari 0 hingga 80. Sedangkan sumbu vertikal menampilkan jumlah produktivitas aktual dari 0 hingga 300.")
-        st.write("Pada grafik tersebut, terdapat batang dengan ketinggian yang berbeda-beda yang mewakili jumlah produktivitas aktual untuk setiap jumlah pekerja. Terdapat satu batang yang sangat tinggi di sekitar 60 pekerja, menunjukkan jumlah produktivitas aktual yang tinggi untuk jumlah pekerja tersebut. Sementara batang lainnya lebih pendek, menunjukkan jumlah produktivitas yang lebih rendah untuk jumlah pekerja yang berbeda.")
-        st.write("Dengan demikian, grafik tersebut menunjukkan bahwa jumlah pekerja yang optimal untuk mencapai produktivitas tertinggi adalah sekitar 60 pekerja, yang menghasilkan jumlah produktivitas aktual yang paling tinggi.")
+        st.write("Grafik tersebut memperlihatkan hubungan antara jumlah pekerja dan produktivitas aktual. Di sumbu horizontal, jumlah pekerja ditampilkan dari 0 hingga 80, sedangkan di sumbu vertikal, produktivitas aktual ditampilkan dari 0 hingga 300. Setiap batang dalam grafik mewakili jumlah produktivitas untuk setiap jumlah pekerja. Terdapat satu batang yang mencapai ketinggian yang sangat tinggi di sekitar 60 pekerja, menandakan produktivitas tertinggi yang dicapai pada jumlah pekerja ini. Ini menunjukkan bahwa jumlah pekerja optimal untuk mencapai produktivitas tertinggi adalah sekitar 60 orang.")
 
         fig_histogram7 = px.histogram(data, x='targeted_productivity', y='actual_productivity', title='Actual Productivity vs Targeted Productivity')
         fig_histogram7.update_traces(marker=dict(color='rgba(100, 149, 237, 0.7)', line=dict(color='rgba(0,0,0,0.5)', width=0.5)), opacity=0.75)
         fig_histogram7.update_layout(bargap=0.1)
         st.plotly_chart(fig_histogram7)
-        st.write("""
-        Grafik ini membandingkan Actual Productivity (Produktivitas Aktual) dengan Targeted Productivity (Produktivitas yang Ditargetkan). 
-        Sumbu x menunjukkan nilai Targeted Productivity, seperti 0.6, 0.65, 0.7, 0.75, dan 0.8, sementara sumbu y menunjukkan jumlah Actual Productivity, berkisar dari 0 hingga 400.
-
-        Setiap batang pada grafik mewakili nilai Targeted Productivity. Tinggi batang menunjukkan jumlah Actual Productivity untuk setiap nilai tersebut. 
-        Batang yang lebih pendek, seperti untuk nilai 0.6 dan 0.65, menunjukkan Actual Productivity yang lebih rendah, sedangkan batang yang lebih tinggi, seperti untuk nilai 0.7 dan 0.75, menunjukkan Actual Productivity yang lebih tinggi. 
-        Yang paling menonjol adalah batang untuk nilai 0.8, menandakan jumlah Actual Productivity tertinggi pada tingkat Targeted Productivity tersebut.
-
-        Secara keseluruhan, grafik ini menyarankan bahwa Actual Productivity mencapai puncaknya saat Targeted Productivity diatur pada 0.8. 
-        Dengan kata lain, semakin tinggi nilai Targeted Productivity, semakin tinggi kemungkinan Actual Productivity juga meningkat. 
-        Ini mengindikasikan bahwa ketika Targeted Productivity yang ditetapkan lebih tinggi, Actual Productivity cenderung naik.
-        """)
+        st.write("""Grafik membandingkan Actual Productivity (Produktivitas Aktual) dengan Targeted Productivity (Produktivitas yang Ditargetkan). Setiap batang pada grafik mewakili nilai Targeted Productivity, di mana tinggi batang menunjukkan jumlah Actual Productivity untuk setiap nilai tersebut. Secara keseluruhan, grafik menunjukkan bahwa Actual Productivity mencapai puncaknya saat Targeted Productivity diatur pada 0.8. Dengan demikian, peningkatan nilai Targeted Productivity cenderung berdampak positif pada Actual Productivity.""")
 
         fig_scatter = px.scatter(data, x='productivity_difference', y='actual_productivity', title='Actual Productivity vs Productivity Difference')
         st.plotly_chart(fig_scatter)
         # Explanation
-        explanation = """
-        Grafik yang menunjukkan garis naik menunjukkan bahwa ketika ada perbedaan antara produktivitas aktual dengan target yang ditetapkan (yang kita sebut sebagai "Productivity Difference"), produktivitas aktual cenderung meningkat. Misalnya, jika hasil kerja aktual lebih tinggi dari target yang ditetapkan, produktivitas aktual juga cenderung lebih tinggi. Begitu juga sebaliknya, jika hasil kerja aktual lebih rendah dari target, produktivitas aktual cenderung menurun.
-
-        Jadi, semakin besar perbedaan antara produktivitas aktual dan target yang ditetapkan, semakin besar juga kemungkinan bahwa produktivitas aktual akan meningkat atau menurun. Dalam grafik ini, kita melihat pola umum bahwa ketika perbedaan antara hasil aktual dan target semakin besar, produktivitas aktual cenderung meningkat secara keseluruhan.
-        """
+        explanation = """ Grafik menunjukkan bahwa ketika terjadi perbedaan antara produktivitas aktual dan target yang ditetapkan (Productivity Difference), produktivitas aktual cenderung berubah. Ketika hasil kerja aktual lebih tinggi dari target, produktivitas aktual juga cenderung meningkat, dan sebaliknya. Pola umum yang terlihat adalah semakin besar perbedaan antara hasil aktual dan target, semakin besar juga kemungkinan bahwa produktivitas aktual akan meningkat atau menurun. """
 
         # Display the explanation
         st.write(explanation)
 
     # Comparison
     elif visualization_option == "Comparison":
-        st.header("Comparison")
 
         # Box Plot of Actual Productivity by Department
-        st.subheader("Comparison: Box Plot of Actual Productivity by Department")
         fig6 = px.box(data, x='department', y='actual_productivity', title='Box Plot of Actual Productivity by Department')
         st.plotly_chart(fig6, use_container_width=True)
-        st.write("- **Jumlah Data**: Departemen 1 memiliki lebih banyak data (623) dibandingkan dengan Departemen 0 (468).")
-        st.write("- **Rata-rata Actual Productivity**: Rata-rata produktivitas aktual di Departemen 0 (0.7619) sedikit lebih tinggi daripada di Departemen 1 (0.7524).")
-        st.write("- **Standar Deviasi**: Standar deviasi Departemen 0 (0.1785) lebih tinggi dibandingkan dengan Departemen 1 (0.1202). Yang menunjukkan bahwa variasi dalam produktivitas aktual lebih besar di Departemen 0.")
-        st.write("- **Kuartil**: Distribusi data antara kedua departemen ini bervariasi, yang ditunjukkan oleh perbedaan dalam nilai kuartil pertama (25%), median, dan kuartil ketiga (75%).")
-        st.write("- **Nilai Minimum dan Maksimum**: Meskipun nilai minimum dan maksimum cukup serupa untuk kedua departemen, namun rentang (range) nilai actual productivity cukup bervariasi di antara keduanya.")
-        st.write("Kesimpulannya, meskipun rata-rata produktivitas aktual di Departemen 0 lebih tinggi, variasi dalam kinerja karyawan lebih besar daripada di Departemen 1. Hal ini menunjukkan bahwa meskipun ada beberapa perbedaan dalam kinerja antara kedua departemen, perlu diperhatikan bahwa faktor lain juga dapat memengaruhi produktivitas, seperti faktor lingkungan kerja, sumber daya, atau kebijakan perusahaan.")
+        st.write("Departemen 1 memiliki lebih banyak data daripada Departemen 0, tetapi rata-rata produktivitas aktual di Departemen 0 sedikit lebih tinggi. Variasi dalam produktivitas di Departemen 0 lebih besar daripada di Departemen 1. Hal ini berarti di Departemen 0, kinerja karyawan bisa sangat berbeda-beda, sementara di Departemen 1, kinerja karyawan lebih stabil. Meskipun ada perbedaan dalam kinerja antara departemen, faktor lain seperti lingkungan kerja dan kebijakan perusahaan juga memengaruhi produktivitas.")
+        
 
         # Average Productivity per Day (Stacked Bar Plot)
-        st.subheader("Comparison: Average Productivity per Day")
         avg_productivity_per_day = data.groupby('day')['actual_productivity'].mean().reset_index()
         avg_productivity_per_day['Average Productivity'] = avg_productivity_per_day['actual_productivity']
         avg_productivity_per_day.drop(columns=['actual_productivity'], inplace=True)
@@ -191,34 +156,15 @@ Kesimpulannya, meskipun jam lembur berkontribusi positif pada produktivitas, pen
                                             title='Average Productivity per Day', labels={'day': 'Day', 'Average Productivity': 'Average Productivity'},
                                             color='Average Productivity', color_continuous_scale='viridis')
         st.plotly_chart(fig_avg_productivity_per_day, use_container_width=True)
-        st.write("- **Hari 0**: Rata-rata produktivitas aktual pada hari ini adalah 0.7572.")
-        st.write("- **Hari 1**: Rata-rata produktivitas aktual pada hari ini adalah 0.7753.")
-        st.write("- **Hari 2**: Rata-rata produktivitas aktual pada hari ini adalah 0.7439.")
-        st.write("- **Hari 3**: Rata-rata produktivitas aktual pada hari ini adalah 0.7428.")
-        st.write("- **Hari 4**: Rata-rata produktivitas aktual pada hari ini adalah 0.7663.")
-        st.write("- **Hari 5**: Rata-rata produktivitas aktual pada hari ini adalah 0.7548.")
-
-        st.write("Dari data tersebut, terlihat bahwa rata-rata produktivitas aktual cenderung bervariasi setiap harinya. Misalnya, hari 1 memiliki rata-rata tertinggi dengan 0.7753, sedangkan hari 3 memiliki rata-rata terendah dengan 0.7428. Hal ini menunjukkan adanya perubahan dalam kinerja produktivitas selama periode tersebut.")
+        st.write("Data menunjukkan variasi dalam rata-rata produktivitas aktual dari hari ke hari. Misalnya, hari 1 memiliki rata-rata tertinggi dengan 0.7753, sedangkan hari 3 memiliki rata-rata terendah dengan 0.7428. Hal ini menunjukkan adanya perubahan dalam kinerja produktivitas selama periode waktu yang diamati.")
 
         fig_box = px.box(data, x='quarter', y='actual_productivity', title='Box Plot: Actual Productivity by Quarter')
         st.plotly_chart(fig_box)
         # Explanation
         st.write("""
-        - **Kuartal 0** memiliki rata-rata (mean) tertinggi dengan nilai 0.7674, sementara **Kuartal 2** memiliki rata-rata terendah dengan 0.7307.
-        - **Kuartal 0** juga memiliki median (nilai tengah) tertinggi dengan 0.8001, menunjukkan bahwa sebagian besar data cenderung berada di atas nilai ini. Sedangkan **Kuartal 2** memiliki median terendah dengan 0.7501.
-        - Persebaran (25th Percentile dan 75th Percentile) dalam **Kuartal 0** dan **Kuartal 1** cukup serupa, tetapi cenderung lebih rendah di **Kuartal 2** dan **Kuartal 3**. Namun, **Kuartal 4** memiliki nilai persebaran tertinggi, menunjukkan adanya variasi yang lebih besar dalam data produktivitas aktual.
-        - Rentang nilai (Min dan Max) dalam **Kuartal 4** sangat besar, dengan nilai minimum 0.4277 dan maksimum 1.0005. Hal ini menunjukkan adanya variasi yang signifikan dalam produktivitas aktual selama kuartal tersebut. Sedangkan kuartal lainnya memiliki rentang nilai yang lebih rendah.
-
-        Dari ringkasan tersebut, dapat disimpulkan bahwa:
-
-        1. **Kuartal 0 dan Kuartal 1** memiliki kinerja yang relatif serupa, dengan rata-rata dan median yang hampir sama tingginya. Ini menunjukkan konsistensi dalam produktivitas selama dua kuartal pertama.
-        2. **Kuartal 2 dan Kuartal 3** memiliki rata-rata dan median yang sedikit lebih rendah dibandingkan dengan dua kuartal sebelumnya. Ini mungkin mengindikasikan adanya tantangan atau fluktuasi dalam kinerja selama periode ini.
-        3. **Kuartal 4** menonjol dengan kinerja yang signifikan, ditandai dengan rata-rata yang jauh lebih tinggi dan rentang nilai yang sangat besar. Hal ini bisa menunjukkan adanya perubahan besar dalam faktor-faktor yang memengaruhi produktivitas selama kuartal tersebut, baik dalam hal peningkatan atau penurunan kinerja.
-
-        Kesimpulannya, sementara kuartal pertama dan kedua menunjukkan konsistensi dalam kinerja, kuartal ketiga menunjukkan sedikit penurunan, dan kuartal keempat menonjol dengan perubahan yang signifikan, baik itu peningkatan atau penurunan, dalam produktivitas.
+ Berdasarkan data, tampaknya dua kuartal pertama memiliki hasil yang hampir sama. Hal ini menunjukkan bahwa pekerjaan berjalan dengan baik pada awal tahun. Namun, di kuartal ketiga, produktivitas sedikit menurun. Di kuartal terakhir, ada perubahan besar. Mungkin ada banyak hal yang terjadi pada saat itu, baik yang baik maupun yang buruk, yang memengaruhi produktivitas. Jadi, kesimpulannya, dua kuartal pertama stabil, kuartal ketiga turun sedikit, dan kuartal terakhir memiliki perubahan besar.
         """)
     elif visualization_option == "Composition":
-        st.header("Composition")
 
         # Composition Quarter
         jumlah_quarter = data['quarter'].value_counts().reset_index()
@@ -226,12 +172,7 @@ Kesimpulannya, meskipun jam lembur berkontribusi positif pada produktivitas, pen
         fig_quarter = px.pie(jumlah_quarter, names='quarter', values='count', title='Composition Quarter')
         st.plotly_chart(fig_quarter)
                 # Penjelasan distribusi pekerjaan di setiap kuartal
-        st.write("Komposisi pekerjaan di setiap kuartal menunjukkan jumlah pekerjaan yang dilakukan dalam rentang waktu yang berbeda-beda selama periode tertentu, yang dibagi menjadi kuartal.")
-        st.write("- *Kuartal 0*: Terdapat 342 pekerjaan yang dilakukan selama kuartal ini.")
-        st.write("- *Kuartal 1*: Pada kuartal ini, dilakukan sebanyak 295 pekerjaan.")
-        st.write("- *Kuartal 2*: Terdapat 226 pekerjaan yang dilakukan selama kuartal ini.")
-        st.write("- *Kuartal 3*: Pada kuartal ini, terdapat 187 pekerjaan yang dilakukan.")
-        st.write("- *Kuartal 4*: Jumlah pekerjaan paling sedikit terjadi pada kuartal ini, hanya terdapat 41 pekerjaan.")
+        st.write("Data komposisi pekerjaan menunjukkan variasi jumlah pekerjaan dalam setiap kuartal selama periode tertentu. Misalnya, kuartal 0 memiliki 342 pekerjaan, sementara kuartal 4 hanya memiliki 41 pekerjaan. Variasi ini dapat memengaruhi produktivitas secara langsung. Jika jumlah pekerjaan rendah, karyawan mungkin memiliki lebih sedikit tekanan, yang dapat meningkatkan efisiensi. Namun, peningkatan jumlah pekerjaan bisa menyebabkan kelelahan dan penurunan produktivitas.")
 
         # Composition Department
         jumlah_department = data['department'].value_counts().reset_index()
@@ -245,40 +186,17 @@ Kesimpulannya, meskipun jam lembur berkontribusi positif pada produktivitas, pen
         jumlah_day.columns = ['day', 'count']
         fig_day = px.pie(jumlah_day, names='day', values='count', title='Composition Day')
         st.plotly_chart(fig_day)
-        st.write("Dari jumlah data yang diberikan, terlihat bahwa:")
-        st.write("- Hari 0: Terdapat 177 data.")
-        st.write("- Hari 1: Terdapat 172 data.")
-        st.write("- Hari 2: Terdapat 192 data.")
-        st.write("- Hari 3: Terdapat 177 data.")
-        st.write("- Hari 4: Terdapat 182 data.")
-        st.write("- Hari 5: Terdapat 191 data.")
-        st.write("")
-        st.write("Hasil ini menunjukkan bahwa jumlah pekerjaan paling banyak dilakukan pada Hari 2 dengan total 192 data, yang menandakan bahwa Hari 2 adalah saat di mana pekerjaan paling sibuk dilakukan dalam dataset. Sedangkan Hari 1 memiliki jumlah pekerjaan yang paling sedikit dilakukan, yaitu 172 data.")
+        st.write("Perubahan jumlah pekerjaan setiap hari dapat langsung memengaruhi produktivitas. Saat beban kerja meningkat, terutama pada Hari 2, bisa menimbulkan stres dan kelelahan, berpotensi menurunkan produktivitas. Sebaliknya, pada hari dengan jumlah pekerjaan yang lebih sedikit, seperti Hari 1, karyawan memiliki lebih banyak waktu untuk fokus pada tugas mereka, meningkatkan produktivitas. Dengan memahami perubahan ini, manajemen dapat merencanakan dan mengelola sumber daya dengan lebih efektif untuk mempertahankan produktivitas yang optimal.")
 
         # Composition Team
         jumlah_team = data['team'].value_counts().reset_index()
         jumlah_team.columns = ['team', 'count']
         fig_team = px.pie(jumlah_team, names='team', values='count', title='Composition Team')
         st.plotly_chart(fig_team)
-        st.write("Dari data tersebut, terlihat bahwa:")
-        st.write("- Tim 1: Terdapat 98 data.")
-        st.write("- Tim 2: Terdapat 102 data.")
-        st.write("- Tim 3: Terdapat 86 data.")
-        st.write("- Tim 4: Terdapat 95 data.")
-        st.write("- Tim 5: Terdapat 78 data.")
-        st.write("- Tim 6: Terdapat 87 data.")
-        st.write("- Tim 7: Terdapat 83 data.")
-        st.write("- Tim 8: Terdapat 94 data.")
-        st.write("- Tim 9: Terdapat 101 data.")
-        st.write("- Tim 10: Terdapat 95 data.")
-        st.write("- Tim 11: Terdapat 76 data.")
-        st.write("- Tim 12: Terdapat 96 data.")
-        st.write("")
-        st.write("Dari data tersebut, terlihat bahwa jumlah pekerjaan paling banyak dilakukan pada Tim 9 dengan total 101 data. Yang menunjukkan bahwa pekerjaan paling sibuk dilakukan oleh Tim 9 dalam dataset ini. Sedangkan jumlah pekerjaan yang paling sedikit dilakukan adalah pada Tim 11 dengan hanya 76 data.")
+        st.write("Dari data tersebut, terlihat bahwa jumlah pekerjaan paling banyak dilakukan pada Tim 9 dengan total 101 data. Yang menunjukkan bahwa pekerjaan paling sibuk dilakukan oleh Tim 9 dalam dataset ini. Sedangkan jumlah pekerjaan yang paling sedikit dilakukan adalah pada Tim 11 dengan hanya 76 data. Variasi dalam beban kerja antara tim-tim dapat memengaruhi produktivitas. Tim yang lebih sibuk mungkin mengalami tekanan dan kelelahan yang dapat menurunkan produktivitas, sementara tim yang kurang sibuk dapat fokus lebih baik pada tugas-tugas mereka, meningkatkan produktivitas.")
 
     # Hubungan
     elif visualization_option == "Relationship":
-        st.header("Relationship")
 
         # Heatmap Korelasi
         st.subheader("Heatmap Korelasi")
@@ -286,22 +204,18 @@ Kesimpulannya, meskipun jam lembur berkontribusi positif pada produktivitas, pen
         correlation_matrix = numeric_columns.corr()
         fig9 = px.imshow(correlation_matrix, color_continuous_scale='blues', labels=dict(x="Variabel", y="Variabel", color="Korelasi"))
         st.plotly_chart(fig9, use_container_width=True)
-        # Penjelasan Korelasi
-        st.write("Korelasi adalah ukuran statistik yang menunjukkan seberapa kuat hubungan antara dua variabel. Nilai korelasi berkisar dari -1 hingga 1.")
-        st.write("Nilai 1 menunjukkan korelasi positif sempurna, sementara nilai -1 menunjukkan korelasi negatif sempurna. Nilai 0 menunjukkan tidak adanya korelasi.")
-
         # Penjelasan Korelasi untuk Setiap Variabel
-        st.write("Berikut Penjelasan Korelasi untuk Setiap Variabel:")
-        st.write("1. *Department*: Ada hubungan positif yang kuat antara departemen dengan targeted_productivity, no_of_workers, dan incentive. Ada hubungan negatif yang kuat dengan wip dan productivity_difference.")
-        st.write("2. *Team*: Pola korelasi di sini mirip dengan departemen, dengan hubungan positif yang kuat dengan targeted_productivity, no_of_workers, dan incentive, dan hubungan negatif yang kuat dengan wip dan productivity_difference.")
-        st.write("3. *SMV*: Ada hubungan positif yang kuat antara SMV dengan incentive, yang berarti semakin tinggi nilai SMV, semakin besar kemungkinan ada insentif yang diberikan. Ada hubungan negatif yang kuat antara SMV dengan wip.")
-        st.write("4. *WIP*: Korelasi negatif yang kuat antara wip dengan variabel lain menunjukkan bahwa semakin tinggi jumlah pekerjaan yang masih dalam proses, semakin rendah produktivitas atau insentif yang diberikan, dan sebaliknya.")
-        st.write("5. *Over Time*: Hubungan positif yang kuat dengan over_time menunjukkan bahwa semakin banyak waktu lembur yang digunakan, semakin tinggi kemungkinan adanya insentif atau peningkatan jumlah pekerja.")
-        st.write("6. *Incentive*: Hubungan positif yang kuat dengan incentive menunjukkan bahwa semakin besar insentif yang diberikan, semakin tinggi kemungkinan ada peningkatan produktivitas atau pekerjaan yang dilakukan oleh tim.")
-        st.write("7. *No of Workers*: Ada hubungan positif yang kuat antara jumlah pekerja dengan variabel lain seperti department, team, smv, over_time, dan incentive.")
-        st.write("8. *Productivity Difference*: Korelasi positif yang kuat dengan variabel lain menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin besar kemungkinan adanya pekerjaan yang masih dalam proses atau waktu lembur yang digunakan.")
-        st.write("9. *Actual Productivity*: Korelasi negatif yang kuat dengan productivity_difference menunjukkan bahwa semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin rendah produktivitas aktualnya.")
-        
+        st.write("""
+        - Korelasi adalah ukuran statistik yang menunjukkan hubungan antara dua variabel, dengan nilai dari -1 hingga 1.
+        - Korelasi positif terlihat antara departemen dan tim dengan targeted_productivity, no_of_workers, dan incentive.
+        - Korelasi negatif terlihat antara departemen dan tim dengan wip dan productivity_difference.
+        - SMV berkorelasi positif dengan incentive, tetapi negatif dengan wip.
+        - WIP berkorelasi negatif dengan variabel lain, menunjukkan semakin tinggi jumlah pekerjaan yang masih dalam proses, semakin rendah produktivitas atau insentif yang diberikan.
+        - Over Time berkorelasi positif dengan insentif, menunjukkan semakin banyak waktu lembur yang digunakan, semakin tinggi kemungkinan adanya insentif.
+        - Korelasi positif juga terlihat antara jumlah pekerja dengan variabel lain seperti department, team, smv, over_time, dan incentive.
+        - Korelasi negatif terlihat antara productivity_difference dan actual_productivity, menunjukkan semakin besar perbedaan antara produktivitas yang ditargetkan dan aktual, semakin rendah produktivitas aktualnya.
+        """)
+
 elif nav_selection == "Predict":
     # Input fields
     st.header("Input Features")
